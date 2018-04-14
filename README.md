@@ -2,6 +2,38 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ---
+## Overview
+
+In Term 1, I used deep learning to predict steering angles to keep a vehicle on track. In this project, the same gaol is achieveed with a PID controller. 
+PID controller stands for Proportional, Integral, and Differential controller. A controller has generally the purpose of following a signal trajectory given system dynamics which are making the task more difficult i.e. are the reason why issues like overshoot and rise time exist.
+
+## Impact of P,I,D Components
+
+### P term
+The P error term is proportional to cross-track error (CET) and determines the speed of the control system response as the ratio of output response (defined by weight Kp) to the CET signal. The increasing the weight Kp increases the speed of system response and enables the vehicle to better follows to sharp turns. However, if the proportional weight Kp is too large, the vehicle will begin to oscillate around the target trajectory. If Kp is increased further, the oscillations (overshooting of target trajectory) will become larger and the vehicle behavior will become unstable and it may even leave the track. The using P term alone does not allow to drive through turns on the track because the vehicle leads to overshoot the target trajectory too with unstable behavior at the end. 
+
+Riding on a vehicle controlled only by P term will make you dizzy soon!
+
+### I term
+The `I` error term is proportional to both the magnitude of the CET and the duration of the CET and its impact is adjusted by weight Ki. The I term tries to use the history error information by integration. The integral term `I` accelerate the movement of the process towards target trajectory and eliminates the residual steady-state error as a bias between target trajectory and vehicle trajectory, that occurs with a pure proportional controller. 
+
+
+### D term
+The differential part of the controller is a term that uses the difference between the previous and current time step to create another part of the PID controller. This part controlls the overshoot caused by the P controller and allows the control signal to asymptotically approach the goal trajectory.
+
+## Hyperparameter Selection
+The video tutorial provide a set of initial parameters : `(0.2, 3.0, 0.004)`. Using that as a start point, I fine tuned the parameters based on trial and errors. Here are some observations:
+A large `Kp` term yields large oscillations, while a small `Kp` term will fail at turns.
+`Ki` doesn't seems to affec the performance too much.
+`Kd` term is quit interesting. It can reduce oscillation in the trajectory, but a too large `Kd` term keeps turning the car left and right like crazy. 
+I manually adjusted the parameters up and down each time running the simulator until the car ran smoothly without too much overshoot and constant drift to one side. I finally settled at the values (0.1, 0.001, 10).
+
+## Basic Build Instructions
+
+1. Clone this repo.
+2. Make a build directory: `mkdir build && cd build```
+3. Compile: `cmake .. && make`
+4. Run it: `./pid`. 
 
 ## Dependencies
 
@@ -28,12 +60,7 @@ Self-Driving Car Engineer Nanodegree Program
 
 There's an experimental patch for windows in this [PR](https://github.com/udacity/CarND-PID-Control-Project/pull/3)
 
-## Basic Build Instructions
 
-1. Clone this repo.
-2. Make a build directory: `mkdir build && cd build`
-3. Compile: `cmake .. && make`
-4. Run it: `./pid`. 
 
 Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
 
